@@ -18,7 +18,7 @@ jobs:
       - name: set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
       
       - name: waiting for mongo to be ready
         run: |
@@ -43,7 +43,7 @@ jobs:
       - name: set up node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
 
       - name: install dependencies and run tests
         working-directory: ./backend
