@@ -14,8 +14,12 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-           cd devops-project-demo/
-           git pull origin main
-           docker-compose down
-           docker-compose up --build -d
+            set -e
+            cd ~/devops-project-demo
+
+            git pull origin main
+
+            docker compose down
+            docker compose up --build -d
+
         
