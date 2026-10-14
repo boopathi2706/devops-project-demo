@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  mongo-init:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo
+        ports: ['27017:27017']
+    steps:
+      - name: checkout repository
+        uses: action/checkout@v5
+      - name: set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      
+      - name: waiting for mongo to be ready
+        run: |
+          until nc -z localhost 27017; do
+            echo "Waiting for MongoDB to be ready..."
+            sleep 1
+          done
+            echo "MongoDB is ready!"
+      - name : mongoDB seed data
+        working-directory: ./backend
+        run: |
+          npm install
+          node seedTasksData.js
+
+  test:
+    runs-on: ubuntu-latest
+    needs: mongo-init
+
+    steps:
+      - name: checkout repository
+        uses: action/checkout@v5
+      - name: set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          
+      - name: install dependencies and run tests
+        working-directory: ./backend
+        run: |
+          npm install
+          npm test
